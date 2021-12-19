@@ -1,0 +1,60 @@
+package com.village.api.model;
+
+public class Citizen {
+
+	private Long id;
+	private String name;
+	private String lastname;
+	private String CPF;
+	private String income;
+	private String dataNascimento;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setSurname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getCPF() {
+		return CPF;
+	}
+
+	public void setCPF(String cpf) {
+		this.CPF = cpf;
+	}
+
+	public String getIncome() {
+		return income;
+	}
+
+	public void setIncome(String income) {
+		this.income = income;
+	}
+
+	public String getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(String dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+
+}
