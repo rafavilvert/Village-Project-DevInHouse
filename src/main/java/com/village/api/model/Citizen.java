@@ -2,18 +2,18 @@ package com.village.api.model;
 
 public class Citizen {
 
-	private Long id;
+	private Integer id;
 	private String name;
 	private String lastname;
 	private String CPF;
 	private String income;
 	private String dataNascimento;
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

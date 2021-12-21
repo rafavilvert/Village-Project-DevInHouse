@@ -67,12 +67,51 @@ public class CitizensDAO {
 			return Optional.ofNullable(citizen);
 		}
 	}
+	
+	public List<CitizensDTO> getAvengersByFilter(String name) throws SQLException {
+		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
+			PreparedStatement pStmt = 
+					connection.prepareStatement("SELECT * FROM citizen WHERE name LIKE ?");
+			pStmt.setString(1, name + "%");
+			pStmt.execute();
+			ResultSet resultSet = pStmt.getResultSet();
+			List<CitizensDTO> avengers = new ArrayList<>();
+			while (resultSet.next()) {
+				avengers.add(extractedCitizen(resultSet));
+			}
+			return avengers;
+		}
+	}
+	
+	public CitizensDTO create(CitizensDTO citizen) throws SQLException {
+		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
+			PreparedStatement pStmt = connection.prepareStatement(
+					"INSERT INTO citizen (name, lastname, cpf, income, datanascimento) VALUES(?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
+
+			pStmt.setString(1, citizen.getName());
+			pStmt.setString(2, citizen.getLastname());
+			pStmt.setString(3, citizen.getCpf());
+			pStmt.setString(4, citizen.getIncome());
+			pStmt.setString(5, citizen.getDataNascimento());
+
+			pStmt.execute();
+
+			ResultSet resultSet = pStmt.getGeneratedKeys();
+			while (resultSet.next()) {
+				Integer id = resultSet.getInt(1);
+				citizen.setId(id);
+			}
+			return citizen;
+		}
+
+	}
 
 	private CitizensDTO extractedCitizen(ResultSet resultSet) throws SQLException {
 		int id = resultSet.getInt("id");
 		String name = resultSet.getString("name");
-		String lastname = resultSet.getString("cpf");
-		String cpf = resultSet.getString("name");
+		String lastname = resultSet.getString("lastname");
+		String cpf = resultSet.getString("cpf");
 		String income = resultSet.getString("income");
 		String dataNascimento = resultSet.getString("datanascimento");
 		CitizensDTO citizen = new CitizensDTO(name, lastname, cpf, income, dataNascimento);

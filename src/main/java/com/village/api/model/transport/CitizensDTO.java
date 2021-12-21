@@ -86,7 +86,10 @@ public class CitizensDTO {
 		CitizensDTO other = (CitizensDTO) obj;
 		return Objects.equals(lastname, other.lastname) && Objects.equals(name, other.name);
 	}
-	
-	
 
+	@Override
+	public String toString() {
+		return "CitizensDTO [id=" + id + ", name=" + name + ", lastname=" + lastname + ", cpf=" + cpf + ", income="
+				+ income + ", dataNascimento=" + dataNascimento + "]";
+	}
 }
