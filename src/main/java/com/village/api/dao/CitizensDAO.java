@@ -1,16 +1,18 @@
 package com.village.api.dao;
 
-import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
+import com.village.api.model.transport.CitizenDetailDTO;
 import com.village.api.model.transport.CitizensDTO;
 
 @Repository
@@ -34,16 +36,42 @@ public class CitizensDAO {
 		}
 	}
 
-	public List<CitizensDTO> listCitizens() throws SQLException {
+	public List<CitizenDetailDTO> listCitizens(Integer id) throws SQLException {
 
 		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
+			PreparedStatement prepareStatement = connection.prepareStatement("SELECT * FROM citizen WHERE id=?");
+			prepareStatement.setInt(1, id);
+			prepareStatement.execute();
+			ResultSet resultSet = prepareStatement.getResultSet();
 
-			Statement statement = connection.createStatement();
-			statement.execute("SELECT * FROM citizen");
-			ResultSet resultSet = statement.getResultSet();
+			List<CitizenDetailDTO> citizens = new ArrayList<>();
+			while (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String lastname = resultSet.getString("lastname");
+				String cpf = resultSet.getString("cpf");
+				String income = resultSet.getString("income");
+				Date dataNascimento = resultSet.getDate("datanascimento");
+
+				CitizenDetailDTO citizen = new CitizenDetailDTO(name, lastname, cpf, income, dataNascimento);
+
+				citizens.add(citizen);
+
+			}
+			return citizens;
+		}
+
+	}
+
+	public List<CitizensDTO> listAllCitizens() throws SQLException {
+
+		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
+			PreparedStatement prepareStatement = connection.prepareStatement("SELECT * FROM citizen");
+			prepareStatement.execute();
+			ResultSet resultSet = prepareStatement.getResultSet();
 
 			List<CitizensDTO> citizens = new ArrayList<>();
 			while (resultSet.next()) {
+
 				CitizensDTO citizen = extractedCitizen(resultSet);
 
 				citizens.add(citizen);
@@ -54,7 +82,7 @@ public class CitizensDAO {
 
 	}
 
-	public Optional<CitizensDTO> findById(Long id) throws SQLException {
+	public Optional<CitizensDTO> findById(Integer id) throws SQLException {
 		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
 			PreparedStatement prepareStatement = connection.prepareStatement("SELECT * FROM citizen WHERE id=?");
 			prepareStatement.setLong(1, id);
@@ -67,22 +95,51 @@ public class CitizensDAO {
 			return Optional.ofNullable(citizen);
 		}
 	}
-	
-	public List<CitizensDTO> getAvengersByFilter(String name) throws SQLException {
+
+	public List<CitizensDTO> getCitizensByName(String name) throws SQLException {
 		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
-			PreparedStatement pStmt = 
-					connection.prepareStatement("SELECT * FROM citizen WHERE name LIKE ?");
+			PreparedStatement pStmt = connection.prepareStatement("SELECT * FROM citizen WHERE name LIKE ?");
 			pStmt.setString(1, name + "%");
 			pStmt.execute();
 			ResultSet resultSet = pStmt.getResultSet();
-			List<CitizensDTO> avengers = new ArrayList<>();
+			List<CitizensDTO> citizens = new ArrayList<>();
 			while (resultSet.next()) {
-				avengers.add(extractedCitizen(resultSet));
+				citizens.add(extractedCitizen(resultSet));
 			}
-			return avengers;
+			return citizens;
 		}
 	}
-	
+
+	public List<CitizensDTO> getCitizensByMonth(Integer month) throws SQLException {
+		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
+			PreparedStatement pStmt = connection
+					.prepareStatement("SELECT * FROM citizen WHERE date_part('month', (dataNascimento))=?");
+			pStmt.setInt(1, month);
+			pStmt.execute();
+			ResultSet resultSet = pStmt.getResultSet();
+			List<CitizensDTO> citizens = new ArrayList<>();
+			while (resultSet.next()) {
+				citizens.add(extractedCitizen(resultSet));
+			}
+			return citizens;
+		}
+	}
+
+	public List<CitizensDTO> getCitizensByAge(Integer age) throws SQLException {
+		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
+			PreparedStatement pStmt = connection
+					.prepareStatement("SELECT * FROM citizen WHERE date_part('year', age(dataNascimento)) >= ?");
+			pStmt.setInt(1, age);
+			pStmt.execute();
+			ResultSet resultSet = pStmt.getResultSet();
+			List<CitizensDTO> citizens = new ArrayList<>();
+			while (resultSet.next()) {
+				citizens.add(extractedCitizen(resultSet));
+			}
+			return citizens;
+		}
+	}
+
 	public CitizensDTO create(CitizensDTO citizen) throws SQLException {
 		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
 			PreparedStatement pStmt = connection.prepareStatement(
@@ -93,7 +150,7 @@ public class CitizensDAO {
 			pStmt.setString(2, citizen.getLastname());
 			pStmt.setString(3, citizen.getCpf());
 			pStmt.setString(4, citizen.getIncome());
-			pStmt.setString(5, citizen.getDataNascimento());
+			pStmt.setDate(5, new java.sql.Date(citizen.getDataNascimento().getTime()));
 
 			pStmt.execute();
 
@@ -106,6 +163,16 @@ public class CitizensDAO {
 		}
 
 	}
+	
+	public String delete(Integer id) throws SQLException {
+		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
+			PreparedStatement prepareStatement = connection.prepareStatement("DELETE FROM citizen WHERE id = ?");
+			prepareStatement.setInt(1, id);
+			prepareStatement.execute();
+			String successesDeleted = "Usuário deletado com sucesso";
+			return successesDeleted;
+		}
+	}
 
 	private CitizensDTO extractedCitizen(ResultSet resultSet) throws SQLException {
 		int id = resultSet.getInt("id");
@@ -113,7 +180,7 @@ public class CitizensDAO {
 		String lastname = resultSet.getString("lastname");
 		String cpf = resultSet.getString("cpf");
 		String income = resultSet.getString("income");
-		String dataNascimento = resultSet.getString("datanascimento");
+		Date dataNascimento = resultSet.getDate("datanascimento");
 		CitizensDTO citizen = new CitizensDTO(name, lastname, cpf, income, dataNascimento);
 		citizen.setId(id);
 		return citizen;

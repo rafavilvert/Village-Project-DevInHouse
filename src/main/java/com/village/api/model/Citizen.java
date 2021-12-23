@@ -1,5 +1,7 @@
 package com.village.api.model;
 
+import java.util.Date;
+
 public class Citizen {
 
 	private Integer id;
@@ -7,7 +9,7 @@ public class Citizen {
 	private String lastname;
 	private String CPF;
 	private String income;
-	private String dataNascimento;
+	private Date dataNascimento;
 
 	public Integer getId() {
 		return id;
@@ -49,11 +51,11 @@ public class Citizen {
 		this.income = income;
 	}
 
-	public String getDataNascimento() {
+	public Date getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(String dataNascimento) {
+	public void setDataNascimento(Date dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
