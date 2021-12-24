@@ -9,18 +9,20 @@ public class CitizensDTO {
 	private String name;
 	private String lastname;
 	private String cpf;
-	private String income;
+	private Double income;
+	private Double expense;
 	private Date dataNascimento;
 	
 	public CitizensDTO() {
 	}
 
-	public CitizensDTO(String name, String lastname, String cpf, String income, Date dataNascimento) {
+	public CitizensDTO(String name, String lastname, String cpf, Double income, Double expense, Date dataNascimento) {
 		this.name = name;
 		this.lastname = lastname;
 		this.cpf = cpf;
 		this.income = income;
 		this.dataNascimento = dataNascimento;
+		this.expense = expense;
 	}
 
 	public Integer getId() {
@@ -55,12 +57,20 @@ public class CitizensDTO {
 		this.cpf = cpf;
 	}
 
-	public String getIncome() {
+	public Double getIncome() {
 		return income;
 	}
 
-	public void setIncome(String income) {
+	public void setIncome(Double income) {
 		this.income = income;
+	}
+
+	public Double getExpense() {
+		return expense;
+	}
+
+	public void setExpense(Double expense) {
+		this.expense = expense;
 	}
 
 	public Date getDataNascimento() {
@@ -73,7 +83,7 @@ public class CitizensDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(lastname, name);
+		return Objects.hash(cpf, lastname, name);
 	}
 
 	@Override
@@ -85,12 +95,14 @@ public class CitizensDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		CitizensDTO other = (CitizensDTO) obj;
-		return Objects.equals(lastname, other.lastname) && Objects.equals(name, other.name);
+		return Objects.equals(cpf, other.cpf) && Objects.equals(lastname, other.lastname)
+				&& Objects.equals(name, other.name);
 	}
 
 	@Override
 	public String toString() {
 		return "CitizensDTO [id=" + id + ", name=" + name + ", lastname=" + lastname + ", cpf=" + cpf + ", income="
-				+ income + ", dataNascimento=" + dataNascimento + "]";
+				+ income + ", expense=" + expense + ", dataNascimento=" + dataNascimento + "]";
 	}
+	
 }

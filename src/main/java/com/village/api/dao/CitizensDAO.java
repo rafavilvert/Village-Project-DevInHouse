@@ -49,10 +49,11 @@ public class CitizensDAO {
 				String name = resultSet.getString("name");
 				String lastname = resultSet.getString("lastname");
 				String cpf = resultSet.getString("cpf");
-				String income = resultSet.getString("income");
+				Double income = resultSet.getDouble("income");
+				Double expense = resultSet.getDouble("expense");
 				Date dataNascimento = resultSet.getDate("datanascimento");
 
-				CitizenDetailDTO citizen = new CitizenDetailDTO(name, lastname, cpf, income, dataNascimento);
+				CitizenDetailDTO citizen = new CitizenDetailDTO(name, lastname, cpf, income, expense, dataNascimento);
 
 				citizens.add(citizen);
 
@@ -143,14 +144,15 @@ public class CitizensDAO {
 	public CitizensDTO create(CitizensDTO citizen) throws SQLException {
 		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
 			PreparedStatement pStmt = connection.prepareStatement(
-					"INSERT INTO citizen (name, lastname, cpf, income, datanascimento) VALUES(?, ?, ?, ?, ?)",
+					"INSERT INTO citizen (name, lastname, cpf, income, expense, datanascimento) VALUES(?, ?, ?, ?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
 
 			pStmt.setString(1, citizen.getName());
 			pStmt.setString(2, citizen.getLastname());
 			pStmt.setString(3, citizen.getCpf());
-			pStmt.setString(4, citizen.getIncome());
-			pStmt.setDate(5, new java.sql.Date(citizen.getDataNascimento().getTime()));
+			pStmt.setDouble(4, citizen.getIncome());
+			pStmt.setDouble(5, citizen.getExpense());
+			pStmt.setDate(6, new java.sql.Date(citizen.getDataNascimento().getTime()));
 
 			pStmt.execute();
 
@@ -179,9 +181,10 @@ public class CitizensDAO {
 		String name = resultSet.getString("name");
 		String lastname = resultSet.getString("lastname");
 		String cpf = resultSet.getString("cpf");
-		String income = resultSet.getString("income");
+		Double income = resultSet.getDouble("income");
+		Double expense = resultSet.getDouble("expense");
 		Date dataNascimento = resultSet.getDate("datanascimento");
-		CitizensDTO citizen = new CitizensDTO(name, lastname, cpf, income, dataNascimento);
+		CitizensDTO citizen = new CitizensDTO(name, lastname, cpf, income, expense, dataNascimento);
 		citizen.setId(id);
 		return citizen;
 	}

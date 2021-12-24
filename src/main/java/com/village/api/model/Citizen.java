@@ -9,6 +9,7 @@ public class Citizen {
 	private String lastname;
 	private String CPF;
 	private String income;
+	private Double costs;
 	private Date dataNascimento;
 
 	public Integer getId() {
@@ -30,6 +31,10 @@ public class Citizen {
 	public String getLastname() {
 		return lastname;
 	}
+	
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
 
 	public void setSurname(String lastname) {
 		this.lastname = lastname;
@@ -49,6 +54,14 @@ public class Citizen {
 
 	public void setIncome(String income) {
 		this.income = income;
+	}
+
+	public Double getCosts() {
+		return costs;
+	}
+
+	public void setCosts(Double costs) {
+		this.costs = costs;
 	}
 
 	public Date getDataNascimento() {

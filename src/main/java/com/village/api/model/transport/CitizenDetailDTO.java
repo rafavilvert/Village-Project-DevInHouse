@@ -7,14 +7,17 @@ public class CitizenDetailDTO {
 	private String name;
 	private String lastname;
 	private String cpf;
-	private String income;
+	private Double income;
+	private Double expense;
 	private Date dataNascimento;
 
-	public CitizenDetailDTO(String name, String lastname, String cpf, String income, Date dataNascimento) {
+	public CitizenDetailDTO(String name, String lastname, String cpf, Double income, Double expense,
+			Date dataNascimento) {
 		this.name = name;
 		this.lastname = lastname;
 		this.cpf = cpf;
 		this.income = income;
+		this.expense = expense;
 		this.dataNascimento = dataNascimento;
 	}
 
@@ -42,12 +45,20 @@ public class CitizenDetailDTO {
 		this.cpf = cpf;
 	}
 
-	public String getIncome() {
+	public Double getIncome() {
 		return income;
 	}
 
-	public void setIncome(String income) {
+	public void setIncome(Double income) {
 		this.income = income;
+	}
+
+	public Double getExpense() {
+		return expense;
+	}
+
+	public void setExpense(Double expense) {
+		this.expense = expense;
 	}
 
 	public Date getDataNascimento() {

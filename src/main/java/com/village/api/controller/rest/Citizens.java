@@ -19,6 +19,7 @@ import com.village.api.controller.service.CitienService;
 import com.village.api.exceptions.CitizensNotFoundException;
 import com.village.api.model.transport.CitizenDetailDTO;
 import com.village.api.model.transport.CitizensDTO;
+import com.village.api.model.transport.VillageReportDTO;
 
 @RestController
 @RequestMapping("/citizens")
@@ -82,6 +83,11 @@ public class Citizens {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(citizenCreated);
+	}
+	
+	@GetMapping("/village-report")
+	public VillageReportDTO getReport() throws SQLException, CitizensNotFoundException, IllegalAccessException {
+		return citizenService.getReport();
 	}
 
 }
