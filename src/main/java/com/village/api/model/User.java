@@ -5,10 +5,15 @@ import java.util.Objects;
 public class User {
 
 	private String email;
+
 	private String password;
 
-	public User(String name, String password) {
-		this.password = name;
+	public User(String email) {
+		this.email = email;
+	}
+
+	public User(String email, String password) {
+		this.email = email;
 		this.password = password;
 	}
 
@@ -44,5 +49,6 @@ public class User {
 		User other = (User) obj;
 		return Objects.equals(email, other.email);
 	}
+
 
 }

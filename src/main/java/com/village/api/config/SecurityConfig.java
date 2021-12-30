@@ -20,15 +20,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.village.api.controller.service.UserService;
 import com.village.api.controller.util.JWTUtil;
 import com.village.api.filters.JWTAuthenticationFilter;
+import com.village.api.filters.JWTAuthorizationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	private static final String[] PUBLIC_MATCHERS_POST= {"/login/**"};
+	private static final String[] PUBLIC_MATCHERS_POST = { "/login/**" };
 
 	private UserService userService;
-	
+
 	private JWTUtil jwtUtil;
 
 	public SecurityConfig(UserService userService, JWTUtil jwtUtil) {
@@ -38,24 +39,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth
-			.userDetailsService(userService)
-				.passwordEncoder(getPasswordEncoder());
+		auth.userDetailsService(userService).passwordEncoder(getPasswordEncoder());
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		http
-			.authorizeRequests().antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
-			.anyRequest().authenticated()
-			.and().csrf().disable()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			.and()
-			.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil))
-			.httpBasic();
+		http.cors().and().csrf().disable();
+		http.authorizeRequests().antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll().anyRequest()
+				.authenticated();
+		
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), 
+				jwtUtil, userService));
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
-	
+
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
