@@ -21,6 +21,10 @@ public class UserService implements UserDetailsService {
 	public UserService(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
+	
+	public void updateUser(User user) {
+		userDAO.updateUser(user);
+	}
 
 	public User getUser(String email) {
 		return userDAO.getUser(email);

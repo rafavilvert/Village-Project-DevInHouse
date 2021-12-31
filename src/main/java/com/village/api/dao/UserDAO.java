@@ -19,6 +19,10 @@ public class UserDAO {
 		User rafael = new User("rafavilvert@gmail.com", pe.encode("123456"), Set.of("USER", "ADMIN"));
 		db.put(rafael.getEmail(), rafael);
 	}
+	
+	public void updateUser(User user) {
+		db.replace(user.getEmail(), user);
+	}
 
 	public User getUser(String email) {
 		return db.get(email);
