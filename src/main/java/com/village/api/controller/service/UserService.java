@@ -2,6 +2,8 @@ package com.village.api.controller.service;
 
 import java.util.ArrayList;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +24,15 @@ public class UserService implements UserDetailsService {
 
 	public User getUser(String email) {
 		return userDAO.getUser(email);
+	}
+	
+	public static UserSpringSecurity authenticated() {
+		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			return new UserSpringSecurity((String) authentication.getPrincipal(), null, new ArrayList<>());
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	@Override
