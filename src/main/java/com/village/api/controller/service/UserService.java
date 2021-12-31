@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
 		if (user == null) {
 			throw new UsernameNotFoundException(username);
 		}
-		return new UserSpringSecurity(user.getEmail(), user.getPassword(), new ArrayList<>());
+		return new UserSpringSecurity(user.getEmail(), user.getPassword(), user.getRoles());
 	}
 
 }
