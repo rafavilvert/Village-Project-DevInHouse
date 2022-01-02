@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.village.api.model.transport.CitizenDetailDTO;
 import com.village.api.model.transport.CitizensDTO;
+import com.village.api.model.transport.CreateCitizenDTO;
 
 @Repository
 public class CitizensDAO {
@@ -141,23 +142,32 @@ public class CitizensDAO {
 		}
 	}
 
-	public CitizensDTO create(CitizensDTO citizen) throws SQLException {
+	public CitizensDTO create(CreateCitizenDTO createCitizen) throws SQLException {
 		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
 			PreparedStatement pStmt = connection.prepareStatement(
 					"INSERT INTO citizen (name, lastname, cpf, income, expense, datanascimento) VALUES(?, ?, ?, ?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
 
-			pStmt.setString(1, citizen.getName());
-			pStmt.setString(2, citizen.getLastname());
-			pStmt.setString(3, citizen.getCpf());
-			pStmt.setDouble(4, citizen.getIncome());
-			pStmt.setDouble(5, citizen.getExpense());
-			pStmt.setDate(6, new java.sql.Date(citizen.getDataNascimento().getTime()));
+			pStmt.setString(1, createCitizen.getName());
+			pStmt.setString(2, createCitizen.getLastname());
+			pStmt.setString(3, createCitizen.getCpf());
+			pStmt.setDouble(4, createCitizen.getIncome());
+			pStmt.setDouble(5, createCitizen.getExpense());
+			pStmt.setDate(6, new java.sql.Date(createCitizen.getDataNascimento().getTime()));
 
 			pStmt.execute();
+			
+			CitizensDTO citizen = null;
 
 			ResultSet resultSet = pStmt.getGeneratedKeys();
 			while (resultSet.next()) {
+				String name = resultSet.getString("name");
+				String lastname = resultSet.getString("lastname");
+				String cpf = resultSet.getString("cpf");
+				double income = resultSet.getDouble("income");
+				double expense = resultSet.getDouble("expense");
+				Date datanascimento = resultSet.getDate("datanascimento");
+				citizen = new CitizensDTO(name, lastname, cpf, income, expense, datanascimento);
 				Integer id = resultSet.getInt(1);
 				citizen.setId(id);
 			}

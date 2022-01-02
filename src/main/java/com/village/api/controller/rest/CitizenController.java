@@ -16,18 +16,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.village.api.controller.service.CitienService;
+import com.village.api.controller.service.CitizenService;
 import com.village.api.exceptions.CitizensNotFoundException;
 import com.village.api.model.transport.CitizenDetailDTO;
 import com.village.api.model.transport.CitizensDTO;
+import com.village.api.model.transport.CreateCitizenDTO;
 import com.village.api.model.transport.VillageReportDTO;
 
 @RestController
 @RequestMapping("/citizens")
-public class Citizens {
+public class CitizenController {
 	
 	@Autowired
-	private CitienService citizenService;
+	private CitizenService citizenService;
 	
 	@GetMapping("/list-names")
 	public List<String> listNames() throws SQLException, CitizensNotFoundException {
@@ -67,8 +68,9 @@ public class Citizens {
 		return citizenService.getCitizensByAge(age);
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@PostMapping("/create")
-	public ResponseEntity<CitizensDTO> createNewCitizen(@RequestBody CitizensDTO citizen) throws SQLException, IllegalAccessException {
+	public ResponseEntity<CitizensDTO> createNewCitizen(@RequestBody CreateCitizenDTO citizen) throws SQLException, IllegalAccessException {
 		CitizensDTO citizenCreated = this.citizenService.create(citizen);
 		if (citizenCreated == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

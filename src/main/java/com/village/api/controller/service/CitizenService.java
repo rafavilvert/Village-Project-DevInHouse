@@ -11,18 +11,22 @@ import org.springframework.stereotype.Service;
 import com.village.api.dao.CitizensDAO;
 import com.village.api.model.transport.CitizenDetailDTO;
 import com.village.api.model.transport.CitizensDTO;
+import com.village.api.model.transport.CreateCitizenDTO;
 import com.village.api.model.transport.VillageReportDTO;
 
 @Service
-public class CitienService {
+public class CitizenService {
 
 	@Value("${VILLAGE_BUDGET}")
 	private Double TotalRevenueVillage;
 
 	private CitizensDAO citizenDAO;
 
-	public CitienService(CitizensDAO citizenDAO) {
+	private UserService userService;
+
+	public CitizenService(CitizensDAO citizenDAO, UserService userService) {
 		this.citizenDAO = citizenDAO;
+		this.userService = userService;
 	}
 
 	public List<CitizenDetailDTO> listCitizens(Integer id) throws SQLException {
@@ -92,11 +96,13 @@ public class CitienService {
 		return citizensFiltred;
 	}
 
-	public CitizensDTO create(CitizensDTO citizen) throws SQLException, IllegalAccessException {
-		if (citizen == null) {
+	public CitizensDTO create(CreateCitizenDTO createCitizen) throws SQLException, IllegalAccessException {
+		if (createCitizen == null) {
 			throw new IllegalAccessException("O cidadão está nulo!");
 		}
-		return this.citizenDAO.create(citizen);
+		CitizensDTO newCitizen = this.citizenDAO.create(createCitizen);
+		userService.create(createCitizen.getEmail(), createCitizen.getPassword(), createCitizen.getRoles(), newCitizen.getId());
+		return newCitizen;
 	}
 
 	public String delete(Integer id) throws SQLException, IllegalAccessException {
