@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.village.api.controller.util.ValidationUtil;
 import com.village.api.dao.CitizensDAO;
+import com.village.api.model.User;
 import com.village.api.model.transport.CitizenDetailDTO;
 import com.village.api.model.transport.CitizensDTO;
 import com.village.api.model.transport.CreateCitizenDTO;
@@ -42,17 +43,21 @@ public class CitizenService {
 		return this.citizenDAO.listCitzensNames();
 	}
 
-	public CitizensDTO getById(Integer id) throws SQLException {
+	public CitizensDTO getById(Integer id) throws Exception {
 		if (id == null) {
 			throw new IllegalArgumentException("O Id não pode ser nulo");
 		}
 
 		Optional<CitizensDTO> citizen = citizenDAO.findById(id);
-
-		if (citizen.isPresent()) {
-			return citizen.get();
+		if (!citizen.isPresent()) {
+			throw new Exception("Cidadão não encontrado");
 		}
-		return null;
+		CitizensDTO citizensDTO = citizen.get();
+		
+		User user = userService.getByUserId(id).orElseThrow();
+		citizensDTO.setEmail(user.getEmail());
+		citizensDTO.setRoles(user.getRoles());
+		return citizensDTO;
 	}
 
 	public List<CitizensDTO> getCitizensByName(String name) throws SQLException {
@@ -106,15 +111,15 @@ public class CitizenService {
 		}
 
 		if (!ValidationUtil.isValidName(createCitizen.getName())) {
-
+			throw new IllegalAccessException("Nome inválido");
 		}
 
 		if (!ValidationUtil.isValidName(createCitizen.getLastname())) {
-
+			throw new IllegalAccessException("Sobrenome inválido");
 		}
 
 		if (!ValidationUtil.isValidCPF(createCitizen.getCpf())) {
-
+			throw new IllegalAccessException("CPF inválido");
 		}
 
 		CitizensDTO newCitizen = this.citizenDAO.create(createCitizen);

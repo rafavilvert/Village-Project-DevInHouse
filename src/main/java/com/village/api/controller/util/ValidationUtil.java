@@ -1,5 +1,6 @@
 package com.village.api.controller.util;
 
+import java.util.Date;
 import java.util.regex.Pattern;
 
 public class ValidationUtil {
@@ -23,6 +24,8 @@ public class ValidationUtil {
 		final Pattern pattern = Pattern.compile("(^\\d{3}\\x2E\\d{3}\\x2E\\d{3}\\x2D\\d{2}$)");
 		return pattern.matcher(cpf).matches();
 	}
+	
+	
 
 	public static boolean isValidName(final String name) {
 		if (null == name || name.trim().isEmpty()) {

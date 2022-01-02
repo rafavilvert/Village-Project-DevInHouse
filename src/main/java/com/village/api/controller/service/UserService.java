@@ -3,6 +3,7 @@ package com.village.api.controller.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -68,6 +69,11 @@ public class UserService implements UserDetailsService {
 			throw new IllegalAccessException("Senha incorreta");
 		} 
 		userDAO.createUser(email, passwordEnconde, roles, citizenId);
+		
+	}
+
+	public Optional<User> getByUserId(Integer id) throws SQLException {
+		return this.userDAO.getByUserId(id);
 		
 	}
 

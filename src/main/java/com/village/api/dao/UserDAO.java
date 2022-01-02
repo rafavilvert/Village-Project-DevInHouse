@@ -6,16 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
 import com.village.api.model.User;
-import com.village.api.model.transport.CitizensDTO;
-import com.village.api.model.transport.CreateCitizenDTO;
 
 @Repository
 public class UserDAO {
@@ -56,6 +54,26 @@ public class UserDAO {
 			prestatement.setInt(4, citizenId);
 			prestatement.execute();
 		}		
+		
+	}
+
+	public Optional<User>  getByUserId(Integer id) throws SQLException {
+		try (PreparedStatement prestatement = connection.prepareStatement("SELECT * FROM \"user\" WHERE citizen_id=?")) {
+
+			prestatement.setInt(1, id);
+			prestatement.execute();
+			ResultSet resultSet = prestatement.getResultSet();
+
+			User user = null;
+
+			while (resultSet.next()) {
+				final String[] stringsArr = (String[]) resultSet.getArray("roles").getArray();
+				Set<String> roles = Arrays.stream(stringsArr).collect(Collectors.toSet());
+				user = new User(resultSet.getString("email"), resultSet.getString("password"), roles);
+
+			}
+			return Optional.of(user);
+		}
 		
 	}
 

@@ -46,7 +46,7 @@ public class CitizenController {
 	}
 	
 	@GetMapping("/{id}")
-	public CitizensDTO getById(@PathVariable("id") Integer id) throws SQLException {
+	public CitizensDTO getById(@PathVariable("id") Integer id) throws Exception {
 		return citizenService.getById(id);
 	}
 	
