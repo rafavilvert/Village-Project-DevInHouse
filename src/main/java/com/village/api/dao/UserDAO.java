@@ -17,7 +17,9 @@ public class UserDAO {
 	public UserDAO() {
 		BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
 		User rafael = new User("rafavilvert@gmail.com", pe.encode("123456"), Set.of("USER", "ADMIN"));
+		User vilvert = new User("vilvert@gmail.com", pe.encode("1234"), Set.of("USER"));
 		db.put(rafael.getEmail(), rafael);
+		db.put(vilvert.getEmail(), vilvert);
 	}
 	
 	public void updateUser(User user) {
