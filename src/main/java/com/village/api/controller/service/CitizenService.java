@@ -153,7 +153,6 @@ public class CitizenService {
 
 		for (CitizensDTO citizen : citizens) {
 
-			System.out.println(citizen.getIncome() + revenue);
 			if (citizen.getExpense() > mostExpenseCitizen) {
 				villageReport.setMostExpenseCitizen(citizen.getExpense()); // Cidadao que gasta mais
 			}

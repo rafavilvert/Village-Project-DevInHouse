@@ -52,9 +52,9 @@ public class CitizensDAO {
 				String cpf = resultSet.getString("cpf");
 				Double income = resultSet.getDouble("income");
 				Double expense = resultSet.getDouble("expense");
-				Date dataNascimento = resultSet.getDate("datanascimento");
+				Date birthDate = resultSet.getDate("datanascimento");
 
-				CitizenDetailDTO citizen = new CitizenDetailDTO(name, lastname, cpf, income, expense, dataNascimento);
+				CitizenDetailDTO citizen = new CitizenDetailDTO(name, lastname, cpf, income, expense, birthDate);
 
 				citizens.add(citizen);
 
@@ -166,8 +166,8 @@ public class CitizensDAO {
 				String cpf = resultSet.getString("cpf");
 				double income = resultSet.getDouble("income");
 				double expense = resultSet.getDouble("expense");
-				Date datanascimento = resultSet.getDate("datanascimento");
-				citizen = new CitizensDTO(name, lastname, cpf, income, expense, datanascimento);
+				Date birthDate = resultSet.getDate("datanascimento");
+				citizen = new CitizensDTO(name, lastname, cpf, income, expense, birthDate);
 				Integer id = resultSet.getInt(1);
 				citizen.setId(id);
 			}
@@ -191,8 +191,8 @@ public class CitizensDAO {
 		String cpf = resultSet.getString("cpf");
 		Double income = resultSet.getDouble("income");
 		Double expense = resultSet.getDouble("expense");
-		Date dataNascimento = resultSet.getDate("datanascimento");
-		CitizensDTO citizen = new CitizensDTO(name, lastname, cpf, income, expense, dataNascimento);
+		Date birthDate = resultSet.getDate("datanascimento");
+		CitizensDTO citizen = new CitizensDTO(name, lastname, cpf, income, expense, birthDate);
 		citizen.setId(id);
 		return citizen;
 	}

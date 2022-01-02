@@ -9,16 +9,16 @@ public class CitizenDetailDTO {
 	private String cpf;
 	private Double income;
 	private Double expense;
-	private Date dataNascimento;
+	private Date birthDate;
 
 	public CitizenDetailDTO(String name, String lastname, String cpf, Double income, Double expense,
-			Date dataNascimento) {
+			Date birthDate) {
 		this.name = name;
 		this.lastname = lastname;
 		this.cpf = cpf;
 		this.income = income;
 		this.expense = expense;
-		this.dataNascimento = dataNascimento;
+		this.birthDate = birthDate;
 	}
 
 	public String getName() {
@@ -62,11 +62,11 @@ public class CitizenDetailDTO {
 	}
 
 	public Date getDataNascimento() {
-		return dataNascimento;
+		return birthDate;
 	}
 
-	public void setDataNascimento(Date dataNascimento) {
-		this.dataNascimento = dataNascimento;
+	public void setDataNascimento(Date birthDate) {
+		this.birthDate = birthDate;
 	}
 
 }
