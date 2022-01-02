@@ -1,5 +1,6 @@
 package com.village.api.controller.service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.springframework.security.core.Authentication;
@@ -21,15 +22,15 @@ public class UserService implements UserDetailsService {
 	public UserService(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
-	
+
 	public void updateUser(User user) {
-		userDAO.updateUser(user);
+//		userDAO.updateUser(user);
 	}
 
-	public User getUser(String email) {
+	public User getUser(String email) throws SQLException {
 		return userDAO.getUser(email);
 	}
-	
+
 	public static UserSpringSecurity authenticated() {
 		try {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -41,11 +42,14 @@ public class UserService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = getUser(username);
-		if (user == null) {
+		try {
+			User user = getUser(username);
+			return new UserSpringSecurity(user.getEmail(), user.getPassword(), user.getRoles());
+		} catch (SQLException e) {
+
 			throw new UsernameNotFoundException(username);
 		}
-		return new UserSpringSecurity(user.getEmail(), user.getPassword(), user.getRoles());
+
 	}
 
 }

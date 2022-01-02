@@ -1,5 +1,6 @@
 package com.village.api.controller.rest;
 
+import java.sql.SQLException;
 import java.util.Set;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class UserController {
 	}
 
 	@GetMapping("/{name}")
-	public User getUser(@PathVariable("name") String name) {
+	public User getUser(@PathVariable("name") String name) throws SQLException {
 		return userService.getUser(name);
 	}
 

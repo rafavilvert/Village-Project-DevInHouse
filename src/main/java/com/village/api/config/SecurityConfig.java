@@ -27,7 +27,7 @@ import com.village.api.filters.JWTAuthorizationFilter;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	private static final String[] PUBLIC_MATCHERS_POST = { "/login/**" };
 
 	private UserService userService;
@@ -50,10 +50,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.cors().and().csrf().disable();
 		http.authorizeRequests().antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll().anyRequest()
 				.authenticated();
-		
+
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
-		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), 
-				jwtUtil, userService));
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userService));
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
