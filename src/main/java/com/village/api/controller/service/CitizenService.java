@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.village.api.controller.util.ValidationUtil;
 import com.village.api.dao.CitizensDAO;
 import com.village.api.model.transport.CitizenDetailDTO;
 import com.village.api.model.transport.CitizensDTO;
@@ -97,11 +98,34 @@ public class CitizenService {
 	}
 
 	public CitizensDTO create(CreateCitizenDTO createCitizen) throws SQLException, IllegalAccessException {
+		
+
+
 		if (createCitizen == null) {
 			throw new IllegalAccessException("O cidadão está nulo!");
 		}
+
+		if (!ValidationUtil.isValidName(createCitizen.getName())) {
+
+		}
+
+		if (!ValidationUtil.isValidName(createCitizen.getLastname())) {
+
+		}
+
+		if (!ValidationUtil.isValidCPF(createCitizen.getCpf())) {
+
+		}
+
 		CitizensDTO newCitizen = this.citizenDAO.create(createCitizen);
-		userService.create(createCitizen.getEmail(), createCitizen.getPassword(), createCitizen.getRoles(), newCitizen.getId());
+		try {
+			userService.create(createCitizen.getEmail(), createCitizen.getPassword(), createCitizen.getRoles(),
+					newCitizen.getId());
+		} catch (Exception e) {
+			this.citizenDAO.delete(newCitizen.getId());
+			throw e;
+		}
+		
 		return newCitizen;
 	}
 

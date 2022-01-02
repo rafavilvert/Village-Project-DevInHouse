@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.village.api.controller.util.ValidationUtil;
 import com.village.api.dao.UserDAO;
 import com.village.api.dao.UserSpringSecurity;
 import com.village.api.model.User;
@@ -58,8 +59,14 @@ public class UserService implements UserDetailsService {
 
 	}
 
-	public void create(String email, String password, List<String> roles, Integer citizenId) throws SQLException {
+	public void create(String email, String password, List<String> roles, Integer citizenId) throws SQLException, IllegalAccessException {
 		String passwordEnconde = passwordEncoder.encode(password);
+		if (!ValidationUtil.isValidUsername(email)) {
+			throw new IllegalAccessException("Email inválido");
+		}
+		if (!ValidationUtil.isValidPassword(password)) {
+			throw new IllegalAccessException("Senha incorreta");
+		} 
 		userDAO.createUser(email, passwordEnconde, roles, citizenId);
 		
 	}
