@@ -2,12 +2,15 @@ package com.village.api.controller.service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.village.api.dao.UserDAO;
@@ -18,9 +21,12 @@ import com.village.api.model.User;
 public class UserService implements UserDetailsService {
 
 	private UserDAO userDAO;
+	
+	private PasswordEncoder passwordEncoder;
 
 	public UserService(UserDAO userDAO) {
 		this.userDAO = userDAO;
+		this.passwordEncoder = new BCryptPasswordEncoder();
 	}
 
 	public void updateUser(User user) {
@@ -50,6 +56,12 @@ public class UserService implements UserDetailsService {
 			throw new UsernameNotFoundException(username);
 		}
 
+	}
+
+	public void create(String email, String password, List<String> roles, Integer citizenId) throws SQLException {
+		String passwordEnconde = passwordEncoder.encode(password);
+		userDAO.createUser(email, passwordEnconde, roles, citizenId);
+		
 	}
 
 }
