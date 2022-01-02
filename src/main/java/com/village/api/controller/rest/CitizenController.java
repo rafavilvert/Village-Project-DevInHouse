@@ -46,7 +46,7 @@ public class CitizenController {
 	}
 	
 	@GetMapping("/{id}")
-	public CitizensDTO getById(@PathVariable("id") Integer id) throws SQLException {
+	public CitizensDTO getById(@PathVariable("id") Integer id) throws Exception {
 		return citizenService.getById(id);
 	}
 	
@@ -79,13 +79,8 @@ public class CitizenController {
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<String> delete(@PathVariable("id") Integer id) throws SQLException, IllegalAccessException {
-		String citizenCreated = this.citizenService.delete(id);
-		System.out.println(citizenCreated);
-		if (citizenCreated == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
-		return ResponseEntity.status(HttpStatus.OK).body(citizenCreated);
+	public void delete(@PathVariable("id") Integer id) throws SQLException, IllegalAccessException {
+		this.citizenService.delete(id);
 	}
 	
 	@PreAuthorize("hasAnyRole('ADMIN')")

@@ -3,6 +3,7 @@ package com.village.api.controller.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.village.api.controller.util.ValidationUtil;
 import com.village.api.dao.UserDAO;
 import com.village.api.dao.UserSpringSecurity;
 import com.village.api.model.User;
@@ -58,10 +60,25 @@ public class UserService implements UserDetailsService {
 
 	}
 
-	public void create(String email, String password, List<String> roles, Integer citizenId) throws SQLException {
+	public void create(String email, String password, List<String> roles, Integer citizenId) throws SQLException, IllegalAccessException {
 		String passwordEnconde = passwordEncoder.encode(password);
+		if (!ValidationUtil.isValidUsername(email)) {
+			throw new IllegalAccessException("Email inválido");
+		}
+		if (!ValidationUtil.isValidPassword(password)) {
+			throw new IllegalAccessException("Senha incorreta");
+		} 
 		userDAO.createUser(email, passwordEnconde, roles, citizenId);
 		
+	}
+
+	public Optional<User> getByUserId(Integer id) throws SQLException {
+		return this.userDAO.getByUserId(id);
+		
+	}
+
+	public void deleteByCitizenId(Integer citizenId) throws SQLException {
+		userDAO.deleteUser(citizenId);
 	}
 
 }

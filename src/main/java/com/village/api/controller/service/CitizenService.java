@@ -8,7 +8,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.village.api.controller.util.ValidationUtil;
 import com.village.api.dao.CitizensDAO;
+import com.village.api.model.User;
 import com.village.api.model.transport.CitizenDetailDTO;
 import com.village.api.model.transport.CitizensDTO;
 import com.village.api.model.transport.CreateCitizenDTO;
@@ -41,17 +43,21 @@ public class CitizenService {
 		return this.citizenDAO.listCitzensNames();
 	}
 
-	public CitizensDTO getById(Integer id) throws SQLException {
+	public CitizensDTO getById(Integer id) throws Exception {
 		if (id == null) {
 			throw new IllegalArgumentException("O Id não pode ser nulo");
 		}
 
 		Optional<CitizensDTO> citizen = citizenDAO.findById(id);
-
-		if (citizen.isPresent()) {
-			return citizen.get();
+		if (!citizen.isPresent()) {
+			throw new Exception("Cidadão não encontrado");
 		}
-		return null;
+		CitizensDTO citizensDTO = citizen.get();
+		
+		User user = userService.getByUserId(id).orElseThrow();
+		citizensDTO.setEmail(user.getEmail());
+		citizensDTO.setRoles(user.getRoles());
+		return citizensDTO;
 	}
 
 	public List<CitizensDTO> getCitizensByName(String name) throws SQLException {
@@ -97,21 +103,41 @@ public class CitizenService {
 	}
 
 	public CitizensDTO create(CreateCitizenDTO createCitizen) throws SQLException, IllegalAccessException {
+		
+
+
 		if (createCitizen == null) {
 			throw new IllegalAccessException("O cidadão está nulo!");
 		}
+
+		if (!ValidationUtil.isValidName(createCitizen.getName())) {
+			throw new IllegalAccessException("Nome inválido");
+		}
+
+		if (!ValidationUtil.isValidName(createCitizen.getLastname())) {
+			throw new IllegalAccessException("Sobrenome inválido");
+		}
+
+		if (!ValidationUtil.isValidCPF(createCitizen.getCpf())) {
+			throw new IllegalAccessException("CPF inválido");
+		}
+
 		CitizensDTO newCitizen = this.citizenDAO.create(createCitizen);
-		userService.create(createCitizen.getEmail(), createCitizen.getPassword(), createCitizen.getRoles(), newCitizen.getId());
+		try {
+			userService.create(createCitizen.getEmail(), createCitizen.getPassword(), createCitizen.getRoles(),
+					newCitizen.getId());
+		} catch (Exception e) {
+			this.citizenDAO.delete(newCitizen.getId());
+			throw e;
+		}
+		
 		return newCitizen;
 	}
 
-	public String delete(Integer id) throws SQLException, IllegalAccessException {
-		Optional<CitizensDTO> findCitizenToDelete = citizenDAO.findById(id);
-		if (findCitizenToDelete == null || findCitizenToDelete.isEmpty()) {
-			return "Usuário não encontrado";
-		}
-
-		return this.citizenDAO.delete(id);
+	public void delete(Integer id) throws SQLException, IllegalAccessException {
+		
+		this.userService.deleteByCitizenId(id);
+		this.citizenDAO.delete(id);
 	}
 
 	public VillageReportDTO getReport() throws SQLException, IllegalAccessException {
@@ -127,7 +153,6 @@ public class CitizenService {
 
 		for (CitizensDTO citizen : citizens) {
 
-			System.out.println(citizen.getIncome() + revenue);
 			if (citizen.getExpense() > mostExpenseCitizen) {
 				villageReport.setMostExpenseCitizen(citizen.getExpense()); // Cidadao que gasta mais
 			}

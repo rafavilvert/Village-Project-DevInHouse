@@ -1,12 +1,12 @@
 package com.village.api.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,9 +52,9 @@ public class CitizensDAO {
 				String cpf = resultSet.getString("cpf");
 				Double income = resultSet.getDouble("income");
 				Double expense = resultSet.getDouble("expense");
-				Date dataNascimento = resultSet.getDate("datanascimento");
+				Date birthDate = resultSet.getDate("datanascimento");
 
-				CitizenDetailDTO citizen = new CitizenDetailDTO(name, lastname, cpf, income, expense, dataNascimento);
+				CitizenDetailDTO citizen = new CitizenDetailDTO(name, lastname, cpf, income, expense, birthDate);
 
 				citizens.add(citizen);
 
@@ -153,7 +153,7 @@ public class CitizensDAO {
 			pStmt.setString(3, createCitizen.getCpf());
 			pStmt.setDouble(4, createCitizen.getIncome());
 			pStmt.setDouble(5, createCitizen.getExpense());
-			pStmt.setDate(6, new java.sql.Date(createCitizen.getDataNascimento().getTime()));
+			pStmt.setDate(6, Date.valueOf(createCitizen.getDataNascimento()));
 
 			pStmt.execute();
 			
@@ -166,8 +166,8 @@ public class CitizensDAO {
 				String cpf = resultSet.getString("cpf");
 				double income = resultSet.getDouble("income");
 				double expense = resultSet.getDouble("expense");
-				Date datanascimento = resultSet.getDate("datanascimento");
-				citizen = new CitizensDTO(name, lastname, cpf, income, expense, datanascimento);
+				Date birthDate = resultSet.getDate("datanascimento");
+				citizen = new CitizensDTO(name, lastname, cpf, income, expense, birthDate);
 				Integer id = resultSet.getInt(1);
 				citizen.setId(id);
 			}
@@ -176,13 +176,11 @@ public class CitizensDAO {
 
 	}
 	
-	public String delete(Integer id) throws SQLException {
+	public void delete(Integer id) throws SQLException {
 		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
 			PreparedStatement prepareStatement = connection.prepareStatement("DELETE FROM citizen WHERE id = ?");
 			prepareStatement.setInt(1, id);
 			prepareStatement.execute();
-			String successesDeleted = "Usuário deletado com sucesso";
-			return successesDeleted;
 		}
 	}
 
@@ -193,8 +191,8 @@ public class CitizensDAO {
 		String cpf = resultSet.getString("cpf");
 		Double income = resultSet.getDouble("income");
 		Double expense = resultSet.getDouble("expense");
-		Date dataNascimento = resultSet.getDate("datanascimento");
-		CitizensDTO citizen = new CitizensDTO(name, lastname, cpf, income, expense, dataNascimento);
+		Date birthDate = resultSet.getDate("datanascimento");
+		CitizensDTO citizen = new CitizensDTO(name, lastname, cpf, income, expense, birthDate);
 		citizen.setId(id);
 		return citizen;
 	}

@@ -1,8 +1,10 @@
 package com.village.api.model.transport;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class CreateCitizenDTO {
 
@@ -11,13 +13,14 @@ public class CreateCitizenDTO {
 	private String cpf;
 	private Double income;
 	private Double expense;
-	private Date dataNascimento;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	private LocalDate dataNascimento;
 	private String email;
 	private String password;
 	private List<String> roles;
 
 	public CreateCitizenDTO(String name, String lastname, String cpf, Double income, Double expense,
-			Date dataNascimento, String email, String password, List<String> roles) {
+			LocalDate dataNascimento, String email, String password, List<String> roles) {
 		super();
 		this.name = name;
 		this.lastname = lastname;
@@ -70,11 +73,11 @@ public class CreateCitizenDTO {
 		this.expense = expense;
 	}
 
-	public Date getDataNascimento() {
+	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(Date dataNascimento) {
+	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
