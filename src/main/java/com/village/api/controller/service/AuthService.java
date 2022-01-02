@@ -1,10 +1,13 @@
 package com.village.api.controller.service;
 
+import java.sql.SQLException;
 import java.util.Random;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.village.api.dao.UserSpringSecurity;
 import com.village.api.model.User;
 
 @Service
@@ -14,31 +17,34 @@ public class AuthService {
 	private PasswordEncoder passwordEncoder;
 	private UserService userService;
 
-	public AuthService(UserService userService,
-			PasswordEncoder passwordEncoder,
-			EmailService emailService) {
+	public AuthService(UserService userService, PasswordEncoder passwordEncoder, EmailService emailService) {
 		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
 		this.emailService = emailService;
 	}
 
-	public void sendNewPass(String email)  {
-		User user = userService.getUser(email);
-		if(user == null) {
+	public void sendNewPass(String email) {
+		try {
+			User user = userService.getUser(email);
+			String newPass = generatePassword();
+			String encodePass = passwordEncoder.encode(newPass);
+			user.setPassword(encodePass);
+			userService.updateUser(user);
+			emailService.sendNewPassword(user, newPass);
+		} catch (SQLException e) {
+
 			throw new RuntimeException("Email not found.");
 		}
-		String newPass = generatePassword();
-		String encodePass = passwordEncoder.encode(newPass);
-		user.setPassword(encodePass);
-		userService.updateUser(user);
-		emailService.sendNewPassword(user, newPass);
+
 	}
+
 	private String generatePassword() {
 		return new String(generatePassword(12));
 	}
-	
+
 	/**
 	 * https://www.tutorialspoint.com/Generating-password-in-Java
+	 * 
 	 * @param length
 	 * @return
 	 */
