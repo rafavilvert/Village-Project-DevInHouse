@@ -99,7 +99,7 @@ public class CitizensDAO {
 
 	public List<CitizensDTO> getCitizensByName(String name) throws SQLException {
 		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
-			PreparedStatement pStmt = connection.prepareStatement("SELECT * FROM citizen WHERE name LIKE ?");
+			PreparedStatement pStmt = connection.prepareStatement("SELECT * FROM citizen WHERE name ILIKE ?");
 			pStmt.setString(1, name + "%");
 			pStmt.execute();
 			ResultSet resultSet = pStmt.getResultSet();
