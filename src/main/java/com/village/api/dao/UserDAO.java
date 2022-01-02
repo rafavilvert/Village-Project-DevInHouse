@@ -4,14 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import com.village.api.model.User;
@@ -38,7 +34,9 @@ public class UserDAO {
 			User user = null;
 			
 			while (resultSet.next()) {
-				user = new User(resultSet.getString("email"), resultSet.getString("password"));
+				final String[] stringsArr = (String[]) resultSet.getArray("roles").getArray();
+				Set<String> roles = Arrays.stream(stringsArr).collect(Collectors.toSet());
+				user = new User(resultSet.getString("email"), resultSet.getString("password"), roles);
 
 			}
 			return user;
