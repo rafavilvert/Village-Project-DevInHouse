@@ -1,10 +1,12 @@
 package com.village.api.model.transport;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CitizensDTO {
 
 	private Integer id;
@@ -13,19 +15,19 @@ public class CitizensDTO {
 	private String cpf;
 	private Double income;
 	private Double expense;
-	private Date dataNascimento;
+	private Date birthDate;
 	private String email;
 	private Set<String> roles;
 
 	public CitizensDTO() {
 	}
 
-	public CitizensDTO(String name, String lastname, String cpf, Double income, Double expense, Date dataNascimento) {
+	public CitizensDTO(String name, String lastname, String cpf, Double income, Double expense, Date birthDate) {
 		this.name = name;
 		this.lastname = lastname;
 		this.cpf = cpf;
 		this.income = income;
-		this.dataNascimento = dataNascimento;
+		this.birthDate = birthDate;
 		this.expense = expense;
 	}
 
@@ -78,11 +80,11 @@ public class CitizensDTO {
 	}
 
 	public Date getDataNascimento() {
-		return dataNascimento;
+		return birthDate;
 	}
 
-	public void setDataNascimento(Date dataNascimento) {
-		this.dataNascimento = dataNascimento;
+	public void setDataNascimento(Date birthDate) {
+		this.birthDate = birthDate;
 	}
 
 	public String getEmail() {
@@ -122,7 +124,7 @@ public class CitizensDTO {
 	@Override
 	public String toString() {
 		return "CitizensDTO [id=" + id + ", name=" + name + ", lastname=" + lastname + ", cpf=" + cpf + ", income="
-				+ income + ", expense=" + expense + ", dataNascimento=" + dataNascimento + "]";
+				+ income + ", expense=" + expense + ", dataNascimento=" + birthDate + "]";
 	}
 
 }

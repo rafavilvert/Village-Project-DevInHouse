@@ -3,11 +3,9 @@ package com.village.api.controller.service;
 import java.sql.SQLException;
 import java.util.Random;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.village.api.dao.UserSpringSecurity;
 import com.village.api.model.User;
 
 @Service

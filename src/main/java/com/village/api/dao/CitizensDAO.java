@@ -176,13 +176,11 @@ public class CitizensDAO {
 
 	}
 	
-	public String delete(Integer id) throws SQLException {
+	public void delete(Integer id) throws SQLException {
 		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
 			PreparedStatement prepareStatement = connection.prepareStatement("DELETE FROM citizen WHERE id = ?");
 			prepareStatement.setInt(1, id);
 			prepareStatement.execute();
-			String successesDeleted = "Usuário deletado com sucesso";
-			return successesDeleted;
 		}
 	}
 

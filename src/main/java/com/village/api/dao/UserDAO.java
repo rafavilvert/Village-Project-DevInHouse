@@ -76,6 +76,14 @@ public class UserDAO {
 		}
 		
 	}
+	
+	public void deleteUser(Integer citizen_id) throws SQLException {
+		try (Connection connection = new ConnectionFactoryJDBC().getConnection()) {
+			PreparedStatement prepareStatement = connection.prepareStatement("DELETE FROM \"user\" WHERE citizen_id = ?");
+			prepareStatement.setInt(1, citizen_id);
+			prepareStatement.execute();
+		}
+	}
 
 //	
 //	public void updateUser(User user) {

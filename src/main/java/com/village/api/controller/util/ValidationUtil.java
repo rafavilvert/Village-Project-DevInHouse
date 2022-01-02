@@ -1,6 +1,5 @@
 package com.village.api.controller.util;
 
-import java.util.Date;
 import java.util.regex.Pattern;
 
 public class ValidationUtil {

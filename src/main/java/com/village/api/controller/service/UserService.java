@@ -77,4 +77,8 @@ public class UserService implements UserDetailsService {
 		
 	}
 
+	public void deleteByCitizenId(Integer citizenId) throws SQLException {
+		userDAO.deleteUser(citizenId);
+	}
+
 }

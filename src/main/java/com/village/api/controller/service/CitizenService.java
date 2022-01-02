@@ -134,13 +134,10 @@ public class CitizenService {
 		return newCitizen;
 	}
 
-	public String delete(Integer id) throws SQLException, IllegalAccessException {
-		Optional<CitizensDTO> findCitizenToDelete = citizenDAO.findById(id);
-		if (findCitizenToDelete == null || findCitizenToDelete.isEmpty()) {
-			return "Usuário não encontrado";
-		}
-
-		return this.citizenDAO.delete(id);
+	public void delete(Integer id) throws SQLException, IllegalAccessException {
+		
+		this.userService.deleteByCitizenId(id);
+		this.citizenDAO.delete(id);
 	}
 
 	public VillageReportDTO getReport() throws SQLException, IllegalAccessException {
