@@ -1,6 +1,6 @@
 # Village-Project-DevInHouse
 
-This project was developed with Java.<br>
+This project was developed with Spring Bott.<br>
 
 ### Built With
 
@@ -14,7 +14,7 @@ This project was developed with Java.<br>
 
 ## Project: 
 
-This is a Restful API based on Spring Boot with postgressql connection. 
+This is a Restful API based on Spring Boot with postgresql connection. 
 
 ## Require:
 
