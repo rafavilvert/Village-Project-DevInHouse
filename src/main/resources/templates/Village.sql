@@ -1,4 +1,4 @@
-CREATE DATA TABLE village;
+CREATE DATABASE village;
 
 CREATE TABLE citizen (id SERIAL PRIMARY KEY, name varchar(60) NOT NULL, lastname varchar(60) NOT NULL, CPF varchar(15) NOT NULL UNIQUE, income decimal(10,2) NOT NULL, expense decimal(10,2) NOT NULL, dataNascimento Date NOT NULL);
 
