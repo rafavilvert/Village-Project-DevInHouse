@@ -14,7 +14,7 @@ This project was developed with Spring Bott.<br>
 
 ## Project: 
 
-This is a Restful API based on Spring Boot with postgresql connection. 
+This is a Rest API based on Spring Boot with postgresql connection. 
 
 ## Require:
 
