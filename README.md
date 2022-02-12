@@ -1,6 +1,6 @@
 # Village-Project-DevInHouse
 
-This project was developed with Spring Bott.<br>
+This project was developed with Spring Boot.<br>
 
 ### Built With
 
